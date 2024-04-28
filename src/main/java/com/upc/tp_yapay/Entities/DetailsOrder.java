@@ -9,16 +9,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class DetailsOrder {         //DETALLES DE TODOS LOS PRODUCTOS COMPRADOS EN UNA FECHA ESPECIFICA
+public class DetailsOrder {         //DETALLES DE TODOS LOS PRODUCTOS QUE VA A COMPRAR EL CUSTOMER
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_details_order;
     private int amount;
     private int Subtotal;
 
-   /* @OneToMany
-    @JoinColumn(name = "id_product") //EN CADA DETALLE DE ORDEN HAY VARIOS PRODUCTOS (DIFERENTES)
-    private Products products;*/
+    @ManyToOne
+    @JoinColumn(name = "id_product") //VARIOS DETALLES DE ORDEN PUEDEN ESTAR ASOCIADOS A LA ENTIDAD PRODUCTO
+    private Products products;
 
-
+    @ManyToOne
+    @JoinColumn(name = "id_paymentType") //VARIOS DETALLES DE ORDEN ESTAN ASOCIADOS A LA ENTIDAD PAYMENTTYPE
+    private PaymentType paymentType;
 }

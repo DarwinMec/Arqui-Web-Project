@@ -12,12 +12,12 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 
-public class MyOrders {         //MISORDENES (DETALLE DEL ESTADO Y FECHA DE LAS ORDENES DEL CUSTOMER)
+public class MyOrders {         //MISORDENES ( Y FECHA DE LAS ORDENES DEL CUSTOMER)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_myorders;
-    private String order_status;
     private Date order_date;
+
     //RELACIONADO PRODUCOTS
 
 }
