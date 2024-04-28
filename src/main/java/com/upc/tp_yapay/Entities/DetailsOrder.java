@@ -23,4 +23,7 @@ public class DetailsOrder {         //DETALLES DE TODOS LOS PRODUCTOS QUE VA A C
     @ManyToOne
     @JoinColumn(name = "id_paymentType") //VARIOS DETALLES DE ORDEN ESTAN ASOCIADOS A LA ENTIDAD PAYMENTTYPE
     private PaymentType paymentType;
+    @ManyToOne
+    @JoinColumn(name = "id_customer")
+    private Customer customer;
 }

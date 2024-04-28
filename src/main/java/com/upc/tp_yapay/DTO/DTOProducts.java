@@ -11,8 +11,8 @@ public class DTOProducts {
     private Long id_product;
     private String name_product;
     private String description_product;
-    private String price_product;
+    private int price_product;
     private String product_brand;
     private String size_product;
-
+    private int quantity_product;
 }
