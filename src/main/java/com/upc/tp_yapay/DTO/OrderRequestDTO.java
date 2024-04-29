@@ -12,6 +12,5 @@ import java.util.List;
 public class OrderRequestDTO { //SOLICITUD DE LISTADO DE TODOS LOS PRODUCTOS A COMPRAR POR UN CLIENTE
     private Long customerId;
     private Long paymentTypeId;
-    private List<Long> productIds;
-    private List<Integer> quantities;
+    private List<OrderProductDTO> products;
 }
