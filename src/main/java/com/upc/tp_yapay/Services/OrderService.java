@@ -1,20 +1,22 @@
 package com.upc.tp_yapay.Services;
 
+import com.upc.tp_yapay.DTO.OrderProductDTO;
 import com.upc.tp_yapay.DTO.OrderRequestDTO;
 import com.upc.tp_yapay.DTO.OrderResponseDTO;
-import com.upc.tp_yapay.Entities.Customer;
-import com.upc.tp_yapay.Entities.DetailsOrder;
-import com.upc.tp_yapay.Entities.PaymentType;
-import com.upc.tp_yapay.Entities.Products;
-import com.upc.tp_yapay.Repository.CustomerRepository;
-import com.upc.tp_yapay.Repository.DetailOrderRepository;
-import com.upc.tp_yapay.Repository.PaymentTypeRepository;
-import com.upc.tp_yapay.Repository.ProductRepository;
+import com.upc.tp_yapay.Entities.*;
+import com.upc.tp_yapay.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class OrderService {
+
+   /* @Autowired
+    private OrderRepository orderRepository;
+
     @Autowired
     private DetailOrderRepository detailsOrderRepository;
 
@@ -27,26 +29,32 @@ public class OrderService {
     @Autowired
     private ProductRepository productsRepository;
 
-    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
+    public Long createOrder(OrderRequestDTO orderRequestDTO) {
         Customer customer = customerRepository.findById(orderRequestDTO.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + orderRequestDTO.getCustomerId()));
 
         PaymentType paymentType = paymentTypeRepository.findById(orderRequestDTO.getPaymentTypeId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo de pago no encontrado con ID: " + orderRequestDTO.getPaymentTypeId()));
 
-        DetailsOrder detailsOrder = new DetailsOrder();
-        detailsOrder.setCustomer(customer);
-        detailsOrder.setPaymentType(paymentType);
+        // Crear una nueva orden
+        MyOrders order = new MyOrders();
+        order.setCustomer(customer);
+        order.setPaymentType(paymentType);
+        order.setOrderDate(new Date());
+
+        order = orderRepository.save(order);
 
         int total = 0;
-        for (int i = 0; i < orderRequestDTO.getProductIds().size(); i++) {
-            Long productId = orderRequestDTO.getProductIds().get(i);
-            int quantity = orderRequestDTO.getQuantities().get(i);
+        for (OrderProductDTO orderProductDTO : orderRequestDTO.getProducts()) {
+            Long productId = orderProductDTO.getProductId();
+            int quantity = orderProductDTO.getQuantity();
             Products product = productsRepository.findById(productId)
                     .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + productId));
 
             total += ((product.getPrice_product()) * quantity);
 
+            DetailsOrder detailsOrder = new DetailsOrder();
+            detailsOrder.setOrder(order);
             detailsOrder.setProducts(product);
             detailsOrder.setAmount(quantity);
             detailsOrder.setSubtotal((product.getPrice_product()) * quantity);
@@ -54,12 +62,90 @@ public class OrderService {
             detailsOrderRepository.save(detailsOrder);
         }
 
-        detailsOrder.setSubtotal(total);
-        detailsOrderRepository.save(detailsOrder);
+        return order.getId();
+    }
+
+    public OrderResponseDTO finalizeOrder(Long orderId) {
+        MyOrders order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Orden no encontrada con ID: " + orderId));
+
+        List<DetailsOrder> orderDetails = order.getDetailsOrders();
+
+        int totalAmount = 0;
+        for (DetailsOrder orderDetail : orderDetails) {
+            totalAmount += orderDetail.getSubtotal();
+        }
 
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
-        orderResponseDTO.setOrderId(detailsOrder.getId_details_order());
-        orderResponseDTO.setTotalAmount(total);
+        orderResponseDTO.setOrderId(orderId);
+        orderResponseDTO.setTotalAmount(totalAmount);
+
+        return orderResponseDTO;
+    }*/
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private DetailOrderRepository detailsOrderRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private PaymentTypeRepository paymentTypeRepository;
+
+    @Autowired
+    private ProductRepository productsRepository;
+
+    public Long createOrder(OrderRequestDTO orderRequestDTO) {
+        Customer customer = customerRepository.findById(orderRequestDTO.getCustomerId())
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + orderRequestDTO.getCustomerId()));
+
+        PaymentType paymentType = paymentTypeRepository.findById(orderRequestDTO.getPaymentTypeId())
+                .orElseThrow(() -> new IllegalArgumentException("Tipo de pago no encontrado con ID: " + orderRequestDTO.getPaymentTypeId()));
+
+        // Crear una nueva orden
+        MyOrders order = new MyOrders();
+        order.setCustomer(customer);
+        order.setPaymentType(paymentType);
+        order.setOrderDate(new Date());
+
+        order = orderRepository.save(order);
+
+        int total = 0;
+        for (OrderProductDTO orderProductDTO : orderRequestDTO.getProducts()) {
+            Long productId = orderProductDTO.getProductId();
+            int quantity = orderProductDTO.getQuantity();
+            Products product = productsRepository.findById(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + productId));
+
+            total += ((product.getPrice_product()) * quantity);
+
+            DetailsOrder detailsOrder = new DetailsOrder();
+            detailsOrder.setOrder(order);
+            detailsOrder.setProducts(product);
+            detailsOrder.setAmount(quantity);
+            detailsOrder.setSubtotal((product.getPrice_product()) * quantity);
+
+            detailsOrderRepository.save(detailsOrder);
+        }
+
+        return order.getId();
+    }
+
+    public OrderResponseDTO finalizeOrder(Long orderId) {
+        List<DetailsOrder> orderDetails = detailsOrderRepository.findAllByOrderId(orderId);
+
+        int totalAmount = 0;
+        for (DetailsOrder orderDetail : orderDetails) {
+            totalAmount += orderDetail.getSubtotal();
+        }
+
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+        orderResponseDTO.setOrderId(orderId);
+        orderResponseDTO.setTotalAmount(totalAmount);
+
         return orderResponseDTO;
     }
 }
