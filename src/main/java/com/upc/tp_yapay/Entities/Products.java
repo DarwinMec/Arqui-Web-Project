@@ -16,8 +16,8 @@ public class Products {         //PRODUCTOS
     private Long id_product;
     private String name_product;
     private String description_product;
-    private int price_product;
+    private Integer price_product;
     private String product_brand;
     private String size_product;
-    private int quantity_product;
+    private Integer quantity_product;
  }
