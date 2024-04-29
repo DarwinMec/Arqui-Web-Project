@@ -20,4 +20,18 @@ public class ProductServices {
     public List<Products> list(){
         return productRepository.findAll();
     }
+
+   public List<Products> searchBySizeOrName(String size, String name) {
+       return productRepository.findByNameContainingOrSizeContaining(name, size);
+   }
+    public List<Products> listSoldProducts() {
+        return productRepository.findSoldProducts();
+    }
+    public List<Products> searchSoldProductsByName(String name) {
+        return productRepository.searchSoldProductsByName(name);
+    }
+    public List<Products> searchByBrand(String brand) {
+        return productRepository.findByProductBrandContaining(brand);
+    }
+
 }
