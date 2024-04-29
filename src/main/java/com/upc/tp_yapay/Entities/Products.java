@@ -14,10 +14,10 @@ public class Products {         //PRODUCTOS
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_product;
-    private String name_product;
+    private String name;
     private String description_product;
     private Integer price_product;
-    private String product_brand;
-    private String size_product;
+    private String productBrand;
+    private String size;
     private Integer quantity_product;
  }
