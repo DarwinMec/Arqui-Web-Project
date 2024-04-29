@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,9 +16,18 @@ import java.util.Date;
 public class MyOrders {         //MISORDENES ( Y FECHA DE LAS ORDENES DEL CUSTOMER)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_myorders;
-    private Date order_date;
+    private Long id;
 
-    //RELACIONADO PRODUCOTS
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name = "payment_type_id")
+    private PaymentType paymentType;
+
+    private Date orderDate;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<DetailsOrder> detailsOrders;
 }
