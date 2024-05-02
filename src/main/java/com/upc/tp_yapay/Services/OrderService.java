@@ -120,20 +120,31 @@ public class OrderService {
             Products product = productsRepository.findById(productId)
                     .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + productId));
 
-            total += ((product.getPrice_product()) * quantity);
+            // Verificar si hay suficiente cantidad disponible del producto
+            if (product.getQuantity_product() < quantity) {
+                throw new IllegalArgumentException("No hay suficiente cantidad disponible del producto: " + product.getName());
+            }
 
+            // Calcular el total
+            total += (product.getPrice_product() * quantity);
+
+            // Crear un nuevo detalle de orden
             DetailsOrder detailsOrder = new DetailsOrder();
             detailsOrder.setOrder(order);
             detailsOrder.setProducts(product);
             detailsOrder.setAmount(quantity);
-            detailsOrder.setSubtotal((product.getPrice_product()) * quantity);
+            detailsOrder.setSubtotal(product.getPrice_product() * quantity);
 
+            // Guardar el detalle de orden
             detailsOrderRepository.save(detailsOrder);
+
+            // Actualizar la cantidad disponible del producto
+            product.setQuantity_product(product.getQuantity_product() - quantity);
+            productsRepository.save(product);
         }
 
         return order.getId();
     }
-
     public OrderResponseDTO finalizeOrder(Long orderId) {
         List<DetailsOrder> orderDetails = detailsOrderRepository.findAllByOrderId(orderId);
 
@@ -148,4 +159,7 @@ public class OrderService {
 
         return orderResponseDTO;
     }
+
+
+
 }

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -31,4 +33,9 @@ public class OrderController {
         OrderResponseDTO orderResponseDTO = orderService.finalizeOrder(orderId);
         return new ResponseEntity<>(orderResponseDTO, HttpStatus.OK);
     }
+
+    /*@GetMapping("/sales")
+    public ResponseEntity<List<OrderResponseDTO>> listSales() {
+        List<OrderResponseDTO> orderResponseDTO = orderService.();
+        return new ResponseEntity<>(sales, HttpStatus.OK);*/
 }
