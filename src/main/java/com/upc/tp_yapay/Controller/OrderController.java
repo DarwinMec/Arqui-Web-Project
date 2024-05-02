@@ -15,14 +15,8 @@ import java.util.List;
 public class OrderController {
     @Autowired
     private OrderService orderService;
-//
-   /* @PostMapping("/create")
-    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
-    OrderResponseDTO orderResponseDTO = orderService.createOrder(orderRequestDTO);
-    return new ResponseEntity<>(orderResponseDTO, HttpStatus.CREATED);
-    }*/
 
-    @PostMapping("/create")
+   /* @PostMapping("/create")
     public ResponseEntity<Long> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         Long orderId = orderService.createOrder(orderRequestDTO);
         return new ResponseEntity<>(orderId, HttpStatus.CREATED);
@@ -32,10 +26,31 @@ public class OrderController {
     public ResponseEntity<OrderResponseDTO> finalizeOrder(@PathVariable Long orderId) {
         OrderResponseDTO orderResponseDTO = orderService.finalizeOrder(orderId);
         return new ResponseEntity<>(orderResponseDTO, HttpStatus.OK);
+    }*/
+
+    // Endpoint para crear una nueva orden con varios productos
+    @PostMapping("/create")
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+        try {
+            Long orderId = orderService.createOrder(orderRequestDTO);
+            // Una vez que la orden se crea, inmediatamente se finaliza para obtener el resumen
+            OrderResponseDTO orderResponseDTO = orderService.finalizeOrder(orderId);
+            return new ResponseEntity<>(orderResponseDTO, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            // Manejo de errores si el cliente o el tipo de pago no se encuentran, o si algún producto no existe
+            return new ResponseEntity<>(new OrderResponseDTO(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    /*@GetMapping("/sales")
-    public ResponseEntity<List<OrderResponseDTO>> listSales() {
-        List<OrderResponseDTO> orderResponseDTO = orderService.();
-        return new ResponseEntity<>(sales, HttpStatus.OK);*/
+    // Endpoint para obtener los detalles de una orden ya creada y finalizada
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDTO> getOrderDetails(@PathVariable Long orderId) {
+        try {
+            OrderResponseDTO orderResponseDTO = orderService.finalizeOrder(orderId);
+            return new ResponseEntity<>(orderResponseDTO, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            // Si no se encuentra la orden
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
