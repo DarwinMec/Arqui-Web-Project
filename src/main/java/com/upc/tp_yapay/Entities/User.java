@@ -20,14 +20,26 @@ public class User implements Serializable {       //USUARIO
     private Long user_id;
     private String username;
     private String password;
-
-
     private Boolean enabled;
-    //LAZY = cuando se necesario	EAGER = carga inmediatamente
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Customer customer;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private MicroEmployer employer;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id=" + user_id +
+                ", username='" + username + '\'' +
+                ", enabled=" + enabled +
+                '}';
+    }
 }

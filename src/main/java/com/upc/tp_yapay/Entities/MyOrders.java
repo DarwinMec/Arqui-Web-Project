@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class MyOrders {         //MISORDENES ( Y FECHA DE LAS ORDENES DEL CUSTOM
 
     private Date orderDate;
 
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<DetailsOrder> detailsOrders;
+    private List<DetailsOrder> detailsOrders = new ArrayList<>(); // Inicializar la lista
+
+
 }

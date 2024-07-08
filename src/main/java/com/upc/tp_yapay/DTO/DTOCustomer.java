@@ -16,4 +16,7 @@ public class DTOCustomer {
     private Date birthdate_customer;
     private String phone_customer;
     private String address_customer;
+    private Long userId; // Nuevo campo para asociar un User
+    private Long paymentTypeId; // Nuevo campo para asociar el PaymentType
+
 }
