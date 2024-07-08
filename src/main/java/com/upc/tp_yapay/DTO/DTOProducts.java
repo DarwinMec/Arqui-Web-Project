@@ -15,4 +15,6 @@ public class DTOProducts {
     private String productBrand;
     private String size;
     private Integer quantity_product;
+    private String imageUrl; // URL de la imagen del producto
+
 }
