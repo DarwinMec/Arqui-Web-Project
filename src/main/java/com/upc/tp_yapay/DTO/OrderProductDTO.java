@@ -11,6 +11,5 @@ public class OrderProductDTO {
     private Long productId;
     private String productName;
     private int quantity;
-    private int subtotal;
 
 }

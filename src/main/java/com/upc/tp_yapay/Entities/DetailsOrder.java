@@ -16,13 +16,14 @@ public class DetailsOrder {         //DETALLES DE TODOS LOS PRODUCTOS QUE VA A C
     private int amount;
     private int Subtotal;
 
-
     @ManyToOne
     @JoinColumn(name = "id_product") //VARIOS DETALLES DE ORDEN PUEDEN ESTAR ASOCIADOS A LA ENTIDAD PRODUCTO
     private Products products;
     @ManyToOne
     @JoinColumn(name = "order_id")
     private MyOrders order;
-
+    /*@ManyToOne
+    @JoinColumn(name = "id_customer")
+    private Customer customer;*/
 
 }

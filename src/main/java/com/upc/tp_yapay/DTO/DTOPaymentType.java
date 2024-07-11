@@ -10,10 +10,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DTOPaymentType {
-    private Long id_paymenteType;
+    private int id_paymenteType;
     private int cardpayment;
     private Date dateexpiration;
     private String titularcard;
     private int CVVcard;
-    private Long customerId; // Asocia con el ID del cliente
+    private Customer customer;
+
 }

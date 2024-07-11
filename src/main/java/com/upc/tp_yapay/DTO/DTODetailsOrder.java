@@ -13,7 +13,6 @@ public class DTODetailsOrder {
     private Long idDetailsOrder;
     private int amount;
     private int Subtotal;
-
     private Products products;
     private MyOrders order;
 

@@ -20,8 +20,4 @@ public class MicroEmployerService {
     public List<MicroEmployer> list(){
         return microEmployerRepository.findAll();
     }
-
-    public MicroEmployer findById(Long id){
-        return microEmployerRepository.findById(id).orElse(null);
-    }
 }

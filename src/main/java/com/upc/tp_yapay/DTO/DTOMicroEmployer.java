@@ -14,6 +14,4 @@ public class DTOMicroEmployer {
     private String email_micro_employer;
     private String name_microEnterprise;
     private String address_microEnterprise;
-    private Long userId; // Nuevo campo para asociar un User
-
 }
